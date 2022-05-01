@@ -9,6 +9,7 @@ from flask_bootstrap import Bootstrap5
 
 from app.cli import create_database
 from app.db import db
+from app.logging_config import log_con
 from app.simple_pages import simple_pages
 from app.auth import auth
 from app.db.models import User
@@ -41,6 +42,7 @@ def create_app():
     app.register_blueprint(simple_pages)
     app.register_blueprint(auth)
     app.register_blueprint(transactions)
+    app.register_blueprint(log_con)
 
     app.context_processor(utility_text_processors)
     # add command function to cli commands

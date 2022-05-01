@@ -1,3 +1,5 @@
+import logging
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 
 from app.auth.decorators import admin_required
@@ -17,6 +19,7 @@ from flask import current_app
 @auth.route('/login', methods=['POST', 'GET'])
 def login():
     form = login_form()
+    log = logging.getLogger("myApp")
     if current_user.is_authenticated:
         return redirect(url_for('auth.dashboard'))
     if form.validate_on_submit():
@@ -30,6 +33,7 @@ def login():
             db.session.commit()
             login_user(user)
             flash("Welcome", 'success')
+            log.info(user.email + "logged in")
             return redirect(url_for('auth.dashboard'))
     return render_template('login.html', form=form)
 
@@ -39,6 +43,7 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('auth.dashboard'))
     form = register_form()
+    log = logging.getLogger("myApp")
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
@@ -50,6 +55,7 @@ def register():
                 db.session.add(user)
                 db.session.commit()
             flash('Congratulations, you are now a registered user!', "success")
+            log.info("New User registered: " + user.email)
             return redirect(url_for('auth.login'), 302)
         else:
             flash('Already Registered')
@@ -71,6 +77,8 @@ def logout():
     user.authenticated = False
     db.session.add(user)
     db.session.commit()
+    log = logging.getLogger("myApp")
+    log.info(user.email + "logged out")
     logout_user()
     return redirect(url_for('auth.login'))
 

@@ -48,7 +48,7 @@ def test_user_file_upload(client):
         os.mkdir(upload_dir)
     if len(os.listdir(upload_dir)) != 0:
         for file in os.listdir(upload_dir):
-            os.remove(file)
+            os.remove(str(upload_dir) + '/' + file)
     assert len(os.listdir(upload_dir)) == 0
     data = {
         'file': open(test_file,'rb')
@@ -56,5 +56,5 @@ def test_user_file_upload(client):
     client.post('/transactions/upload', data=data)
     assert len(os.listdir(upload_dir)) == 1
     for file in os.listdir(upload_dir):
-        os.remove(file)
+        os.remove(str(upload_dir) + '/'+file)
 

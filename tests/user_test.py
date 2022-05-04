@@ -169,3 +169,42 @@ def test_user_upload_wrong_file_content(client):
     assert b'please check the content of your file' in response.data
     for file in os.listdir(upload_dir):
         os.remove(str(upload_dir) + '/' + file)
+
+
+def test_user_upload_multiple_file(client):
+    data = {
+        'email': "test@test.com",
+        'password': "testtest",
+        'confirm': "testtest"
+    }
+    client.post('/register', data=data)
+    data = {
+        'email': "test@test.com",
+        'password': "testtest",
+    }
+    client.post('/login', data=data)
+    root = Path(__file__).parent.parent
+    test_file = root / 'tests' / 'test_transactions.csv'
+    test_file1 = root / 'tests' / 'test_transactions1.csv'
+    upload_dir = root / 'app' / 'uploads'
+    if not os.path.exists(upload_dir):
+        os.mkdir(upload_dir)
+    if len(os.listdir(upload_dir)) != 0:
+        for file in os.listdir(upload_dir):
+            os.remove(str(upload_dir) + '/' + file)
+    assert len(os.listdir(upload_dir)) == 0
+    # post first file
+    data = {
+        'file': open(test_file, 'rb')
+    }
+    client.post('/transactions/upload', data=data)
+    # post second file
+    data = {
+        'file': open(test_file1, 'rb')
+    }
+    client.post('/transactions/upload', data=data)
+    # get current user from database
+    current_user = User.query.filter_by(email='test@test.com').first()
+    assert len(current_user.transaction) == 56
+    for file in os.listdir(upload_dir):
+        os.remove(str(upload_dir) + '/' + file)

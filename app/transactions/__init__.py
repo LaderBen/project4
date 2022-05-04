@@ -35,10 +35,10 @@ def transaction_upload():
     form = csv_upload()
     if form.validate_on_submit():
         log = logging.getLogger("myApp")
-        log.info('csv file uploaded')
-
         filename = secure_filename(form.file.data.filename)
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+        log.info(filename + 'file uploaded')
+
         if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
             os.mkdir(current_app.config['UPLOAD_FOLDER'])
         form.file.data.save(filepath)

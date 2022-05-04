@@ -5,4 +5,7 @@
 
 [![Development Workflow 3.8](https://github.com/LaderBen/project4/actions/workflows/dev.yml/badge.svg)](https://github.com/LaderBen/project4/actions/workflows/dev.yml)
 
-*  [Developmental Deployment](https://laderben-project1-dev.herokuapp.com/)
+* [Developmental Deployment](https://laderben-project1-dev.herokuapp.com/)
+
+# About csv file upload
+* please use the transaction.csv file which under the root directory of the project to test the file upload function.

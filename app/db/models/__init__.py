@@ -37,10 +37,8 @@ class User(UserMixin, db.Model):
     # transaction = db.relationship("Transaction", back_populates="user", cascade="all, delete")
     transaction = db.relationship("Transaction", secondary="transaction_user", backref="users")
     balance = db.Column(db.Float, default=0.0, unique=False)
-
     # `roles` and `groups` are reserved words that *must* be defined
     # on the `User` model to use group- or role-based authorization.
-
     def __init__(self, email, password):
         self.email = email
         self.password = password
@@ -66,6 +64,7 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
+
 class Transaction_user(db.Model):
     __tablename__ = 'transaction_user'
     id = db.Column(db.Integer, primary_key=True)
